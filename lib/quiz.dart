@@ -3,46 +3,60 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/data/questions.dart';
 import 'package:quiz_app/start_screen.dart';
 import 'package:quiz_app/questions_screen.dart';
+import 'package:quiz_app/results_screen.dart';
 
 class Quiz extends StatefulWidget {
-  const Quiz({super.key});
+  const Quiz({Key? key}) : super(key: key);
 
   @override
-  State<Quiz> createState() {
-    return _QuizState();
-  }
+  _QuizState createState() => _QuizState();
 }
 
 class _QuizState extends State<Quiz> {
-  Widget? _screen;
   final List<String> choosedAnswers = [];
+  String _currentScreen = "StartScreen";
 
   @override
   void initState() {
     super.initState();
-    _screen = StartScreen(setScreen);
+    setScreen("StartScreen");
   }
 
   void chooseAnswer(String answer) {
     choosedAnswers.add(answer);
     if (choosedAnswers.length == questions.length) {
-      setState(() {
-        _screen = StartScreen(setScreen);
-        choosedAnswers.clear();
-      });
+      setScreen("ResultScreen");
+      // choosedAnswers.clear();
     }
   }
 
-  void setScreen() {
+  void setScreen(String screen) {
     setState(() {
-      _screen = QuestionsScreen(
-        onSelectedAnswer: chooseAnswer,
-      );
+      _currentScreen = screen;
     });
   }
 
   @override
   Widget build(context) {
+    Widget? _screen;
+
+    switch (_currentScreen) {
+      case "QuestionsScreen":
+        choosedAnswers.clear();
+        _screen = QuestionsScreen(
+          onSelectedAnswer: chooseAnswer,
+        );
+        break;
+      case "ResultScreen":
+        _screen = ResultScreen(
+          setScreen,
+          choosedAnswers: choosedAnswers,
+        );
+        break;
+      default:
+        _screen = StartScreen(setScreen);
+    }
+
     return MaterialApp(
       title: 'Quiz App',
       home: Scaffold(
