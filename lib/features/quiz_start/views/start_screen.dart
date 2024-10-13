@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quiz_app/common/widgets/gradient_background.dart';
 
 class StartScreen extends StatelessWidget {
-  const StartScreen(this.setScreen, {super.key});
-
-  final void Function(String screen) setScreen;
+  const StartScreen({super.key});
 
   @override
   Widget build(context) {
-    return Center(
+    return GradientBackground(
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
             'assets/quiz-logo.png',
@@ -24,18 +25,14 @@ class StartScreen extends StatelessWidget {
               color: Color.fromARGB(200, 255, 255, 255),
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              decoration: TextDecoration.none,
             ),
           ),
-          const SizedBox(
-            height: 60,
-          ),
+          const SizedBox(height: 60),
           ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(120, 45),
-            ),
-            onPressed: () {
-              setScreen("QuestionsScreen");
-            },
+            style: ElevatedButton.styleFrom(minimumSize: const Size(120, 45)),
+            onPressed: () =>
+                Navigator.of(context).pushReplacementNamed('/questions'),
             icon: const Icon(Icons.arrow_right),
             label: const Text('Start'),
           )
